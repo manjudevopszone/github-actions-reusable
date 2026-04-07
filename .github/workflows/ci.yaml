@@ -1,5 +1,10 @@
 name: Common CI
-on: [workflow_call]
+on:
+  workflow_call:
+    inputs:
+      component:
+        required: true
+        type: string
 jobs:
   Build:
     runs-on: self-hosted
@@ -14,10 +19,14 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v5
       - run: echo test
-  Deploy:
+  Dev-Deploy:
     runs-on: self-hosted
     needs: Test
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
-      - run: echo deploy
+        with:
+          repository: manjudevopszone/roboshop-helm
+      - name: Deploy using helm
+        run: |
+          help upgrade -i ${{ inputs.component }} . -f env-dev
