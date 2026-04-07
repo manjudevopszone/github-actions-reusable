@@ -1,7 +1,7 @@
 name: Common CI
 on: [workflow_call]
 jobs:
-  Buid:
+  Build:
     runs-on: self-hosted
     steps:
       - name: Check out repository code
@@ -9,12 +9,14 @@ jobs:
       - run: echo build
   Test:
     runs-on: self-hosted
+    needs: Build
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
       - run: echo test
   Deploy:
     runs-on: self-hosted
+    needs: Test
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
