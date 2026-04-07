@@ -12,6 +12,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v5
       - run: echo build
+
   Test:
     runs-on: self-hosted
     needs: Build
@@ -19,9 +20,57 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v5
       - run: echo test
-  Dev-Deploy:
+
+  Docker-Build-and-Push:
     runs-on: self-hosted
     needs: Test
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+      - run: echo Docker-Build-and-Push
+
+  Dev-Deployment:
+    runs-on: self-hosted
+    needs: Docker-Build-and-Push
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+        with:
+          repository: manjudevopszone/roboshop-helm
+      - name: Deploy using helm
+        run: |
+          #export PATH=/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin 
+          #make component=${{ inputs.component }} env=dev
+
+  QA-Deployment:
+    runs-on: self-hosted
+    needs: Dev-Deployment
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+        with:
+          repository: manjudevopszone/roboshop-helm
+      - name: Deploy using helm
+        run: |
+          #export PATH=/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin 
+          #make component=${{ inputs.component }} env=dev
+
+  staging-Deployment:
+    runs-on: self-hosted
+    needs: QA-Deployment
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+        with:
+          repository: manjudevopszone/roboshop-helm
+      - name: Deploy using helm
+        run: |
+          #export PATH=/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin 
+          #make component=${{ inputs.component }} env=dev
+
+  Prod-Deployment:
+    runs-on: self-hosted
+    needs: staging-Deployment
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
