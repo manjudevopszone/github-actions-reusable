@@ -29,4 +29,4 @@ jobs:
           repository: manjudevopszone/roboshop-helm
       - name: Deploy using helm
         run: |
-          make component= ${{ inputs.component }} env=dev
+          make component=${{ inputs.component }} env=dev
