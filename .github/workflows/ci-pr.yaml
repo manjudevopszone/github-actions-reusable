@@ -1,4 +1,4 @@
-name: Common CI
+name: Common CI-PR
 on:
   workflow_call:
     inputs:
